@@ -20,7 +20,7 @@ if ($qty <= 0) {
 try {
     $pdo->beginTransaction();
 
-    // GATEKEEPER LOGIC 
+    // gatekeeper
     $updateSql = "UPDATE events 
                   SET available_seats = available_seats - ? 
                   WHERE id = ? AND available_seats >= ?";
@@ -29,7 +29,6 @@ try {
     $stmtUpdate->execute([$qty, $eventId, $qty]);
 
     if ($stmtUpdate->rowCount() == 0) {
-        // Jika tidak ada baris yang terupdate, berarti stok habis atau event tidak ada
         $pdo->rollBack();
         http_response_code(409); // Conflict
         echo json_encode(['status' => 'failed', 'message' => 'Tiket habis atau tidak cukup!']);
